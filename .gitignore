@@ -1,0 +1,14 @@
+lib
+.vscode
+node_modules
+
+# lock files
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
