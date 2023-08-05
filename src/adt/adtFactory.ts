@@ -1,4 +1,3 @@
-export type makeADT<Tag extends string> = typeof makeADT<Tag>
 import { z } from "zod";
 import type { CreateObjectFromProperty } from "../objects";
 import type { Unpack } from "../arrays";
@@ -12,7 +11,8 @@ type ExtractMatcherParams<
   [K in keyof T]: CreateObjectFromProperty<Tag, K> & Unpack<Parameters<T[K]>>
 }
 
-export function makeADT<Tag extends string>(type: Tag) {
+export type adtFactory<Tag extends string> = typeof adtFactory<Tag>
+export function adtFactory<Tag extends string>(type: Tag) {
   return function <Matchers extends Record<string, (match: z.infer<any>) => z.SafeParseReturnType<any, any>>>(_ADTMatcher: Collapse<Matchers>) {
     let ofTypeObj = {};
     for(const matcherName in _ADTMatcher) {

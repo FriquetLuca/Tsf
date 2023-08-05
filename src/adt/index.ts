@@ -1,2 +1,2 @@
-export * from "./makeADT"
-export * from "./safeType"
+export * from "./adtFactory"
+export * from "./ofType"

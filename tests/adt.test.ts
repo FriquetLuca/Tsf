@@ -11,9 +11,9 @@ describe("ADT", () => {
     multiply: z.function(z.tuple([z.number(), z.number()]), z.number()),
   });
 
-  const MyADT = tsf.makeADT("type")({
-    propA: tsf.safeType(PropATypeSchema),
-    propB: tsf.safeType(PropBTypeSchema),
+  const MyADT = tsf.adtFactory("type")({
+    propA: tsf.ofType(PropATypeSchema),
+    propB: tsf.ofType(PropBTypeSchema),
   });
   const matcher = MyADT.match({
     propA: (arg) => arg.value.toString(),
