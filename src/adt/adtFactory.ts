@@ -13,7 +13,7 @@ type ExtractMatcherParams<
 
 export type adtFactory<Tag extends string> = typeof adtFactory<Tag>
 export function adtFactory<Tag extends string>(type: Tag) {
-  return function <Matchers extends Record<string, (match: z.infer<any>) => z.SafeParseReturnType<any, any>>>(_ADTMatcher: Collapse<Matchers>) {
+  return <Matchers extends Record<string, (match: z.infer<any>) => z.SafeParseReturnType<any, any>>>(_ADTMatcher: Collapse<Matchers>) => {
     let ofTypeObj = {};
     for(const matcherName in _ADTMatcher) {
       const newProp = {
@@ -33,8 +33,8 @@ export function adtFactory<Tag extends string>(type: Tag) {
     }
     return {
       of: { ...ofTypeObj } as { [K in keyof Matchers]: (...args: Parameters<Matchers[K]>) => Collapse<CreateObjectFromProperty<Tag, K> & Unpack<Parameters<Matchers[K]>>> },
-      match: function <ADTFunctionRecords extends { [K in keyof Matchers]: (...args: Parameters<Matchers[K]>) => unknown }>(_ADTFunc: Collapse<ADTFunctionRecords>) {
-        return function <ADTMappedValues extends ValuesOfKeys<ExtractMatcherParams<Tag, Matchers>>>(_ADTValue: Collapse<ADTMappedValues>, ignoreError: boolean = false) {
+      match: <ADTFunctionRecords extends { [K in keyof Matchers]: (...args: Parameters<Matchers[K]>) => unknown }>(_ADTFunc: Collapse<ADTFunctionRecords>) => {
+        return <ADTMappedValues extends ValuesOfKeys<ExtractMatcherParams<Tag, Matchers>>>(_ADTValue: Collapse<ADTMappedValues>, ignoreError: boolean = false) => {
           const currentADTType = _ADTValue[type];
           if(!ignoreError) {
             const tryMatch = _ADTMatcher[currentADTType](_ADTValue);
