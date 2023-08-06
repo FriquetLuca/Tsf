@@ -1,4 +1,5 @@
 export type AnyFunction = (...arg: any) => any
+export type AnyFunctionAsync = (...arg: any) => Promise<any>
 /**
  * Append an argument's type to a function.
  */

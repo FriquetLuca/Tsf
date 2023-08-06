@@ -1,4 +1,4 @@
-import type { AnyFunction } from "./type";
+import type { AnyFunction, AnyFunctionAsync } from "./type";
 
 type ComposeArgs<
   F extends Function[],
@@ -17,10 +17,29 @@ export type LastFunctionReturnType<
   > = F extends [ ...unknown[], (...arg: infer _) => infer R ]
     ? R
     : Else;
+export type LastFunctionReturnTypeAsync<
+    F extends Array<AnyFunctionAsync>,
+    Else = never
+  > = F extends [ ...unknown[], (...arg: infer _) => infer R ]
+    ? Awaited<R>
+    : Else;
 
 export function compose<FirstFunction extends AnyFunction, F extends Function[]>(
   firstFn: FirstFunction,
   ...fns: ComposeFunctions<F>
 ): (arg: Parameters<FirstFunction>[0]) => LastFunctionReturnType<F, ReturnType<FirstFunction>> {
   return (arg: Parameters<FirstFunction>[0]) => (fns as Function[]).reduce((acc, fn) => fn(acc), firstFn(arg));
+}
+
+export function composeAsync<FirstFunction extends AnyFunctionAsync, F extends AnyFunctionAsync[]>(
+  firstFn: FirstFunction,
+  ...fns: ComposeFunctions<F>
+): (arg: Parameters<FirstFunction>[0]) => Promise<Awaited<LastFunctionReturnType<F, Awaited<ReturnType<FirstFunction>>>>> {
+  return async (arg: Parameters<FirstFunction>[0]) => {
+    let result = await firstFn(arg);
+    for(let i = 0; i < fns.length;) {
+      result = await fns[i++](result);
+    }
+    return result
+  };
 }
