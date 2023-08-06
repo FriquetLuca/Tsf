@@ -4,6 +4,6 @@
  * @param args The arguments of the class constructor.
  * @returns The instance of the class.
  */
-export function newInstance<T extends new (...args: any) => unknown>(TheClass: T, ...args: [...ConstructorParameters<T>]) {
+export function createInstance<T extends new (...args: any) => unknown>(TheClass: T, ...args: [...ConstructorParameters<T>]) {
   return new TheClass(...args) as InstanceType<T>;
 }
