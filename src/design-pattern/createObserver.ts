@@ -1,4 +1,4 @@
-type Listener<T> = (data: T) => void;
+export type Listener<T> = (data: T) => void;
 
 export function createObserver<T>() {
   const listeners: Listener<T>[] = [];

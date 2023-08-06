@@ -1,2 +1,2 @@
 export * from "./createDataProxy"
-export * from "./observer"
+export * from "./createObserver"
