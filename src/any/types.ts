@@ -38,7 +38,7 @@ export type Approximative<T, U> = T extends U ? true : U extends T ? true : fals
 /**
  * The type is true if two types are exactly the same type, false otherwise.
  */
-type Equal<X, Y> = (<T>() => T extends X ? 1 : 2) extends (<T>() => T extends Y ? 1 : 2) ? true : false
+export type Equal<X, Y> = (<T>() => T extends X ? 1 : 2) extends (<T>() => T extends Y ? 1 : 2) ? true : false
 /**
  * The type is true if two types are equivalent (should share the same properties), false otherwise.
  */
