@@ -13,11 +13,11 @@ function ensureError(value: unknown): Error {
   if (value instanceof Error) {
     return value;
   }
-  let stringified = '[Unable to stringify the thrown value]';
+  let stringified = 'Unknown Error';
   try {
     stringified = JSON.stringify(value)
   } catch { }
-  return new Error(`This value was thrown as is: ${stringified}`);
+  return new Error(stringified);
 }
 
 export function execute<T extends (...args: any) => any>(fn: T, ...args: Parameters<T>): Result<ReturnType<T>> {
