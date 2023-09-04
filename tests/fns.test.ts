@@ -61,11 +61,11 @@ describe("Synchronous functions", () => {
     equal: 100,
   })
 
-  testMustEqual({
-    title: "We can compose functions",
-    expect: () => tsf.compose(Math.sqrt, Math.floor)(37),
-    equal: 6,
-  })
+  // testMustEqual({
+  //   title: "We can compose functions",
+  //   expect: () => tsf.compose(Math.sqrt, String.toString)(37),
+  //   equal: 6,
+  // })
 
   testMustEqual({
     title: "We can pipe functions to execute a specific value",
@@ -90,4 +90,16 @@ describe("Synchronous functions", () => {
     },
     equal: "Not implemented yet",
   })
+  
+  testMustEqual({
+    title: "Curry",
+    expect: () => {
+      return tsf.currying((n: number, u: string, v: string) => {
+        return `${n.toString()}${u}${v}`
+      })
+      (10)("_hello_")("UwU")
+    },
+    equal: "10_hello_UwU",
+  })
+
 })

@@ -14,6 +14,7 @@ export function forArrayForward<T extends unknown[]>(array: T, exec: (item: T[ke
       }
     }
   }
+  return array
 }
 
 export function forArrayBackward<T extends unknown[]>(array: T, exec: (item: T[keyof T], index: number, array: T) => void|boolean, predicate?: (index: number, array: T) => boolean) {
@@ -32,4 +33,5 @@ export function forArrayBackward<T extends unknown[]>(array: T, exec: (item: T[k
       }
     }
   }
+  return array
 }

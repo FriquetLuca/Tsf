@@ -1,8 +1,9 @@
-export type MutableData<T> = {
+export type MutableData<T extends object> = {
   get: () => T,
   set: (item: T) => void
 }
-export function createMutableData<T>(mutableData: T): MutableData<T> {
+
+export function mutationFactory<T extends object>(mutableData: T): MutableData<T> {
   let x = mutableData;
   return {
     get: () => ({ ...x }),

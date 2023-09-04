@@ -12,8 +12,8 @@ describe("ADT", () => {
   });
 
   const MyADT = tsf.adtFactory("type")({
-    propA: tsf.ofType(PropATypeSchema),
-    propB: tsf.ofType(PropBTypeSchema),
+    propA: tsf.fromSchema(PropATypeSchema),
+    propB: tsf.fromSchema(PropBTypeSchema),
   });
   const matcher = MyADT.match({
     propA: (arg) => arg.value.toString(),
@@ -50,19 +50,4 @@ describe("ADT", () => {
     })
     expect(matchingPropB).toBe(20);
   })
-});
-/*
-
-describe("object module", () => {
-  test("We can add properties to an object", () => {
-    expect(
-      appendProperties(
-        {},
-        { propA: 125 })
-    ).toStrictEqual(
-      { propA: 125 }
-    );
-  })
-});
-
-*/
+})

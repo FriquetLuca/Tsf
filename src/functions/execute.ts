@@ -1,3 +1,7 @@
+import { Equal } from "../any";
+import { Unpack } from "../arrays";
+import { AnyFunction } from "./type";
+
 export type ResultSuccess<T> = {
   success: true;
   value: T;
