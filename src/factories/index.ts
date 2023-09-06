@@ -1,6 +1,0 @@
-export * from "./adtFactory"
-export * from "./currying"
-export * from "./fromSchema"
-export * from "./monadFactory"
-export * from "./mutationFactory"
-export * from "./ofType"
