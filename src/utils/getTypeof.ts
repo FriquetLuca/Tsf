@@ -3,7 +3,7 @@
  * @param parameter An unknown parameter that we want the type from.
  * @returns The type the parameter is from.
  */
-export function getTypeof(parameter: any) {
+export function getTypeof<T>(parameter: T) {
   if(parameter instanceof Error) {
     return "error"
   }
