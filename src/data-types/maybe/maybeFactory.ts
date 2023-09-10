@@ -13,14 +13,14 @@ function maybe<T>(value: T | null, defaultValue: T | null = null): Maybe<T> {
 }
 
 export type MaybeFactory<T> = {
-  some: (value: T|null) => Maybe<T>,
+  some: (value: T) => Maybe<T>,
   none: () => Maybe<T>,
   fromValue: (value: T|null) => Maybe<T>
 }
 
 export function maybeFactory<T>(defaultValue: T | null = null): MaybeFactory<T> {
   return {
-    some: (value: T | null) => {
+    some: (value: T) => {
       if (value === null) {
         throw Error("Provided value must not be empty");
       }

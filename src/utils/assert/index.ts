@@ -1,2 +1,3 @@
 export * from "./assertDefined"
-export * from "./assertType"
+export * from "./assertExist"
+export * from "./assertNull"

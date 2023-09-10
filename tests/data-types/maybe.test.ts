@@ -56,11 +56,11 @@ testPage({
     },
     {
       type: "normal",
-      title: "A type maybe can force to have a non nullable value as argument using the 'some' method, otherwise it throw an error",
+      title: "We can force the use of null in a some method but it will throw an error",
       expect: () => {
         try {
           const maybeNumberFactory = tsf.maybeFactory(0)
-          const result = maybeNumberFactory.some(null)
+          const result = maybeNumberFactory.some(null as any)
           return false
         } catch(e) {
           return true

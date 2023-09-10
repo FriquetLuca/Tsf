@@ -8,9 +8,9 @@ export function ensureError<T extends Error>(value: unknown, defaultMessage?: st
   if (value instanceof Error) {
     return value as T
   }
-  let stringified = 'Unknown Error'
+  let stringified = "Unknown Error"
   try {
-    stringified = JSON.stringify(value)
+    stringified = `Unknown Error: ${JSON.stringify(value)}`
   } catch { }
   return new Error(defaultMessage || stringified) as T
 }

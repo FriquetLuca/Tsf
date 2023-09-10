@@ -6,16 +6,18 @@ testPage({
   tests: [
     {
       type: "normal",
-      title: "Assert that a value is defined",
+      title: "Any asserts used won't throw an error for an existing data",
       expect: () => {
         tsf.assertDefined({})
+        tsf.assertExist({})
+        tsf.assertNull({})
         return true
       },
       equal: true,
     },
     {
       type: "normal",
-      title: "Throw an error if the value is either undefined or null",
+      title: "AssertDefined > Throw an error if the value is undefined",
       expect: () => {
         try {
           tsf.assertDefined(undefined)
@@ -28,26 +30,36 @@ testPage({
     },
     {
       type: "normal",
-      title: "Test if two types are the same",
+      title: "AssertNull > Throw an error if the value is null",
       expect: () => {
-        return tsf.assertType<{
-          a: number
-        }, {
-          a: number
-        }>(true)
+        try {
+          tsf.assertNull(null)
+        } catch(e) {
+          return true
+        }
+        return false
       },
       equal: true,
     },
     {
       type: "normal",
-      title: "Throw an error if two types are differents",
+      title: "AssertExist > Throw an error if the value is undefined",
       expect: () => {
         try {
-          tsf.assertType<{
-            a: number
-          }, {
-            b: number
-          }>(false)
+          tsf.assertExist(undefined)
+        } catch(e) {
+          return true
+        }
+        return false
+      },
+      equal: true,
+    },
+    {
+      type: "normal",
+      title: "AssertExist > Throw an error if the value is null",
+      expect: () => {
+        try {
+          tsf.assertExist(null)
         } catch(e) {
           return true
         }

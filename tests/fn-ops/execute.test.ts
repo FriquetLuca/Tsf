@@ -39,7 +39,6 @@ testPage({
           return value * value
         }, 20)
         const result = tsf.matchExecute(execd, {
-          SUCCESS: (value) => value,
           ERROR: (_) => 0
         })
         return result
@@ -72,7 +71,6 @@ testPage({
         }, 20)
         const safeExec = tsf.safeExecute((value: number) => value / 100, execd)
         const result = tsf.matchExecute(safeExec, {
-          SUCCESS: (value) => value,
           ERROR: (_) => 0
         })
         return result
