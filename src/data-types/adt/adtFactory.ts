@@ -10,20 +10,9 @@ type ExtractMatcherParams<
 
 export type MatcherDictionary = Record<string, (match: z.infer<any>) => z.SafeParseReturnType<any, any>>
 
-type TypeofADT<Tag extends string, T extends object, K extends keyof T> = CreateObjectFromProperty<Tag, K> & Collapse<Unpack<Parameters<T[K] extends (...args: any) => any ? Parameters<T[K]> : never>>>;
+type MatcherParams<T extends MatcherDictionary, K extends keyof T> = T[K] extends (...args: any) => any ? Parameters<T[K]> : never
 
-export type MatcherRecords<Matchers extends MatcherDictionary> = { [K in keyof Matchers]: (...args: Parameters<Matchers[K]>) => unknown }
-
-export type ADTOfType<Tag extends string, T extends object> = { [K in keyof T]: (...args: T[K] extends (...args: any) => any ? Parameters<T[K]> : never) => TypeofADT<Tag, T, K> }
-
-export type ADTMatchingType<Tag extends string, Matchers extends MatcherDictionary> = <ADTFunctionRecords extends MatcherRecords<Matchers>>(_ADTFunc: Collapse<ADTFunctionRecords>) => ADTMatcher<Tag, Matchers, ADTFunctionRecords>
-
-export type ADTMatcher<Tag extends string, Matchers extends MatcherDictionary, ADTFunctionRecords extends MatcherRecords<Matchers>> = <ADTMappedValues extends GetObjectValues<ExtractMatcherParams<Tag, Matchers>>>(_ADTValue: Collapse<ADTMappedValues>, ignoreError?: boolean) => ReturnType<ADTFunctionRecords[ADTMappedValues[Tag]]>;
-
-export type adtFactory<Tag extends string> = <Matchers extends MatcherDictionary>(_ADTMatcher: Collapse<Matchers>) => {
-  of: ADTOfType<Tag, Matchers>
-  match: ADTMatchingType<Tag, Matchers>
-}
+export type ADTOfType<Tag extends string, T extends MatcherDictionary> = { [K in keyof T]: (...args: MatcherParams<T, K>) => Collapse<CreateObjectFromProperty<Tag, K> & Unpack<MatcherParams<T, K>>> }
 
 export function adtFactory<Tag extends string>(type: Tag) {
   const generator = <Matchers extends MatcherDictionary>(_ADTMatcher: Collapse<Matchers>) => {
@@ -45,15 +34,18 @@ export function adtFactory<Tag extends string>(type: Tag) {
       ofTypeObj = { ...ofTypeObj, ...newProp }
     }
     return {
+      filter: <T extends GetObjectValues<ExtractMatcherParams<Tag, Matchers>>>(anyADT: Collapse<T>, specificADT: keyof typeof _ADTMatcher) => specificADT === anyADT[type] ? anyADT : undefined,
+      in: (anyADT: Collapse<GetObjectValues<ExtractMatcherParams<Tag, Matchers>>>, specificADT: keyof typeof _ADTMatcher) => anyADT[type] === specificADT,
       of: { ...ofTypeObj } as ADTOfType<Tag, Matchers>,
       match: <ADTFunctionRecords extends { [K in keyof Matchers]: (...args: Parameters<Matchers[K]>) => unknown }>(_ADTFunc: Collapse<ADTFunctionRecords>) => {
-        return <ADTMappedValues extends GetObjectValues<ExtractMatcherParams<Tag, Matchers>>>(_ADTValue: Collapse<ADTMappedValues>, ignoreError: boolean = false) => {
+        return <ADTMappedValues extends GetObjectValues<ExtractMatcherParams<Tag, Matchers>>>(_ADTValue: Collapse<ADTMappedValues>) => _ADTFunc[_ADTValue[type]](_ADTValue) as ReturnType<ADTFunctionRecords[ADTMappedValues[Tag]]>
+      },
+      strictMatch: <ADTFunctionRecords extends { [K in keyof Matchers]: (...args: Parameters<Matchers[K]>) => unknown }>(_ADTFunc: Collapse<ADTFunctionRecords>) => {
+        return <ADTMappedValues extends GetObjectValues<ExtractMatcherParams<Tag, Matchers>>>(_ADTValue: Collapse<ADTMappedValues>) => {
           const currentADTType = _ADTValue[type];
-          if(!ignoreError) {
-            const tryMatch = _ADTMatcher[currentADTType](_ADTValue)
-            if(!tryMatch.success) {
-              throw tryMatch.error
-            }
+          const tryMatch = _ADTMatcher[currentADTType](_ADTValue)
+          if(!tryMatch.success) {
+            throw tryMatch.error
           }
           return _ADTFunc[currentADTType](_ADTValue) as ReturnType<ADTFunctionRecords[ADTMappedValues[Tag]]>
         }

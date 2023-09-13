@@ -18,6 +18,10 @@ const matcher = MyADT.match({
   propA: (arg) => arg.value.toString(),
   propB: (arg) => arg.multiply(arg.value, 2)
 });
+const strictMatcher = MyADT.strictMatch({
+  propA: (arg) => arg.value.toString(),
+  propB: (arg) => arg.multiply(arg.value, 2)
+})
 
 testPage({
   title: "ADT",
@@ -49,21 +53,40 @@ testPage({
     {
       type: "normal",
       title: "We can compute specific ADT without bothering to know what ADT it is",
-      expect: () => matcher({
-        type: "propA",
+      expect: () => matcher(MyADT.of.propA({
         value: 10
-      }),
+      })),
       equal: "10"
     },
     {
       type: "normal",
       title: "We can compute specific ADT without bothering to know what ADT it is",
-      expect: () => matcher({
-        type: "propB",
+      expect: () => matcher(MyADT.of.propB({
         value: 10,
         multiply: (a: number, b: number) => a * b
-      }),
+      })),
       equal: 20
+    },
+    {
+      type: "normal",
+      title: "We can compute specific ADT without bothering to know what ADT it is and check data validity along the way",
+      expect: () => strictMatcher(MyADT.of.propB({
+        value: 10,
+        multiply: (a: number, b: number) => a * b
+      })),
+      equal: 20
+    },
+    {
+      type: "normal",
+      title: "We can check what ADT we're facing",
+      expect: () => MyADT.in(MyADT.of.propA({ value: 10 }), "propA"),
+      equal: true
+    },
+    {
+      type: "normal",
+      title: "We can filter an ADT to handle it's existance",
+      expect: () => MyADT.filter(MyADT.of.propA({ value: 10 }), "propA")?.value,
+      equal: 10
     }
   ]
 })
