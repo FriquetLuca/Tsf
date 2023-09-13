@@ -34,7 +34,15 @@ export function adtFactory<Tag extends string>(type: Tag) {
       ofTypeObj = { ...ofTypeObj, ...newProp }
     }
     return {
-      filter: <T extends GetObjectValues<ExtractMatcherParams<Tag, Matchers>>>(anyADT: Collapse<T>, specificADT: keyof typeof _ADTMatcher) => specificADT === anyADT[type] ? anyADT : undefined,
+      extract: <T extends GetObjectValues<ExtractMatcherParams<Tag, Matchers>>, U extends keyof typeof _ADTMatcher>(anyADT: Collapse<T>, specificADT: U): Collapse<T[Tag] extends U ? Omit<T, Tag> : T extends undefined ? undefined : T | undefined> => {
+        if(anyADT[type] === specificADT) {
+          const adtCopy = { ...anyADT }
+          delete adtCopy[type]
+          return adtCopy as any
+        }
+        return undefined as any
+      },
+      filter: <T extends GetObjectValues<ExtractMatcherParams<Tag, Matchers>>, U extends keyof typeof _ADTMatcher>(anyADT: Collapse<T>, specificADT: U) => (specificADT === anyADT[type] ? anyADT : undefined) as T[Tag] extends U ? T : undefined,
       in: (anyADT: Collapse<GetObjectValues<ExtractMatcherParams<Tag, Matchers>>>, specificADT: keyof typeof _ADTMatcher) => anyADT[type] === specificADT,
       of: { ...ofTypeObj } as ADTOfType<Tag, Matchers>,
       match: <ADTFunctionRecords extends { [K in keyof Matchers]: (...args: Parameters<Matchers[K]>) => unknown }>(_ADTFunc: Collapse<ADTFunctionRecords>) => {

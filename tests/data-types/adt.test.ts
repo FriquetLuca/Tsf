@@ -85,8 +85,26 @@ testPage({
     {
       type: "normal",
       title: "We can filter an ADT to handle it's existance",
-      expect: () => MyADT.filter(MyADT.of.propA({ value: 10 }), "propA")?.value,
-      equal: 10
+      expect: () => MyADT.filter(MyADT.of.propA({ value: 10 }), "propA"),
+      equal: {
+        type: "propA",
+        value: 10
+      }
+    },
+    {
+      type: "normal",
+      title: "We can filter an ADT to handle it's existance",
+      expect: () => MyADT.filter(MyADT.of.propB({
+        value: 10,
+        multiply: (a: number, b: number) => a * b
+      }), "propA"),
+      equal: undefined
+    },
+    {
+      type: "normal",
+      title: "We can extract the datas of an ADT",
+      expect: () => MyADT.extract(MyADT.of.propA({ value: 10 }), "propA"),
+      equal: { value: 10 }
     }
   ]
 })
