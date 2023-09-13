@@ -27,7 +27,7 @@ export function deepMerge<T extends object, U extends object[]>(target: T, ...so
         if (!target[key as keyof typeof target]) {
           (target[key as keyof typeof target] as object) = {}
         }
-        deepMerge(target[key as keyof typeof target], source[key as keyof typeof source])
+        deepMerge(target[key as keyof typeof target] as object, source[key as keyof typeof source])
       } else {
         target[key as keyof typeof target] = source[key as keyof typeof source]
       }

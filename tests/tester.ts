@@ -1,5 +1,5 @@
-import { describe, expect, test } from '@jest/globals';
-import type { Unpack } from '../src';
+import { describe, expect, test } from '@jest/globals'
+import type { Unpack } from '../src'
 
 function tester<T>(props: {
   type: "normal", title: string, equal: T, expect: () => T

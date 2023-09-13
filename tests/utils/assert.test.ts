@@ -1,4 +1,4 @@
-import * as tsf from "../../src";
+import * as tsf from "../../src"
 import { testPage } from "../tester"
 
 testPage({

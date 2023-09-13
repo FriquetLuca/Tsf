@@ -1,8 +1,8 @@
-import * as tsf from "../../src";
+import * as tsf from "../../src"
 import { testPage } from "../tester"
 
 testPage({
-  title: "Get Typeof",
+  title: "Typeof",
   tests: [
     {
       type: "normal",
@@ -40,6 +40,35 @@ testPage({
         return tsf.getTypeof([])
       },
       equal: "array",
+    },
+    {
+      type: "normal",
+      title: "Match the type of a value",
+      expect: () => {
+        return tsf.matchTypeof(125, {
+          number: (x) => x * 2
+        })
+      },
+      equal: 250,
+    },
+    {
+      type: "normal",
+      title: "Not implementing a transformation for the match would lead to the value being returned back without transformation",
+      expect: () => {
+        return tsf.matchTypeof(125, {})
+      },
+      equal: 125,
+    },
+    {
+      type: "normal",
+      title: "Match the type of a value",
+      expect: () => {
+        return tsf.matchTypeof(125, {
+          number: (x) => x * 2,
+          boolean: (b) => !b
+        })
+      },
+      equal: 250,
     }
   ]
 })

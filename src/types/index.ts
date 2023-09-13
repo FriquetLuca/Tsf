@@ -1,3 +1,7 @@
+export * from "./abstractConstructor"
+export * from "./anyAsyncFunction"
+export * from "./anyConstructor"
+export * from "./anyConstructorValue"
 export * from "./anyFunction"
 export * from "./appendArgsToFunction"
 export * from "./appendArgTypeToFunction"

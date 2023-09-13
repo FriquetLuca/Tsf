@@ -10,11 +10,11 @@ type ExtractMatcherParams<
 
 export type MatcherDictionary = Record<string, (match: z.infer<any>) => z.SafeParseReturnType<any, any>>
 
-type TypeofADT<Tag extends string, T extends object, K extends keyof T> = CreateObjectFromProperty<Tag, K> & Collapse<Unpack<Parameters<T[K]>>>;
+type TypeofADT<Tag extends string, T extends object, K extends keyof T> = CreateObjectFromProperty<Tag, K> & Collapse<Unpack<Parameters<T[K] extends (...args: any) => any ? Parameters<T[K]> : never>>>;
 
 export type MatcherRecords<Matchers extends MatcherDictionary> = { [K in keyof Matchers]: (...args: Parameters<Matchers[K]>) => unknown }
 
-export type ADTOfType<Tag extends string, T extends object> = { [K in keyof T]: (...args: Parameters<T[K]>) => TypeofADT<Tag, T, K> }
+export type ADTOfType<Tag extends string, T extends object> = { [K in keyof T]: (...args: T[K] extends (...args: any) => any ? Parameters<T[K]> : never) => TypeofADT<Tag, T, K> }
 
 export type ADTMatchingType<Tag extends string, Matchers extends MatcherDictionary> = <ADTFunctionRecords extends MatcherRecords<Matchers>>(_ADTFunc: Collapse<ADTFunctionRecords>) => ADTMatcher<Tag, Matchers, ADTFunctionRecords>
 
