@@ -1,14 +1,24 @@
 export type Maybe<T> = {
   getOrDefault: () => T | null,
   getOrElse: (defaultValue: T) => T,
-  get: () => T | null
+  get: () => T | null,
+  map: <R>(f: (wrapped: T) => R) => Maybe<R>,
+  flatMap: <R>(f: (wrapped: T) => Maybe<R>) => Maybe<R>,
+  export: () => { value: T | null, defaultValue: T | null }
 }
 
-function maybe<T>(value: T | null, defaultValue: T | null = null): Maybe<T> {
+export function maybe<T>(value: T | null, defaultValue: T | null = null): Maybe<T> {
   return {
     get: () => value,
     getOrElse: (defaultValue: T) => value === null ? defaultValue : value,
-    getOrDefault: () => value === null ? defaultValue : value
+    getOrDefault: () => value === null ? defaultValue : value,
+    map: <R>(f: (wrapped: T) => R) => value === null
+      ? defaultValue === null
+        ? maybe<R>(null)
+        : maybe(f(defaultValue))
+      : maybe(f(value)),
+    flatMap: <R>(f: (wrapped: T) => Maybe<R>) => value === null ? maybe<R>(null) : f(value),
+    export: () => ({ value, defaultValue })
   }
 }
 
@@ -27,6 +37,6 @@ export function maybeFactory<T>(defaultValue: T | null = null): MaybeFactory<T> 
       return maybe<T>(value, defaultValue);
     },
     none: () => maybe<T>(null, defaultValue),
-    fromValue: (value: T | null) => maybe<T>(value, defaultValue)
+    fromValue: (value: T | null) => maybe<T>(value, defaultValue),
   };
 }
