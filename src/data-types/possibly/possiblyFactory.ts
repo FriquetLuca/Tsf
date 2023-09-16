@@ -1,10 +1,11 @@
-import { Maybe, maybe } from "../maybe"
+import { type Maybe, maybe } from "../maybe"
 import { type Perhaps, perhaps } from "../perhaps"
 
 export type Possibly<T> = {
   readonly value: T | undefined
   readonly defaultValue: T | undefined
   isEmpty: () => boolean
+  is: (compare: Possibly<T>) => boolean
   getOrDefault: () => T | undefined
   getOrElse: (defaultValue: T) => T
   get: () => T | undefined
@@ -20,8 +21,9 @@ export function possibly<T>(value: T | undefined = undefined, defaultValue: T | 
     value,
     defaultValue,
     isEmpty: () => value === undefined,
+    is: (compare) => value === compare.value,
     get: () => value,
-    getOrElse: (defaultValue: T) => value === undefined ? defaultValue : value,
+    getOrElse: (defaultValue) => value === undefined ? defaultValue : value,
     getOrDefault: () => value === undefined ? defaultValue : value,
     map: <R>(f: (wrapped: T) => R) => value === undefined
       ? defaultValue === undefined

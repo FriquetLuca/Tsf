@@ -5,6 +5,7 @@ export type Perhaps<T> = {
   readonly value: T | undefined | null
   readonly defaultValue: T | undefined | null
   isEmpty: () => boolean
+  is: (compare: Perhaps<T>) => boolean
   getOrDefault: () => T | undefined | null
   getOrElse: (defaultValue: T) => T
   get: () => T | undefined | null
@@ -20,8 +21,9 @@ export function perhaps<T>(value: T | undefined | null = undefined, defaultValue
     value,
     defaultValue,
     isEmpty: () => value === null || value === undefined,
+    is: (compare) => value === compare.value,
     get: () => value,
-    getOrElse: (defaultValue: T) => value === undefined || value === null ? defaultValue : value,
+    getOrElse: (defaultValue) => value === undefined || value === null ? defaultValue : value,
     getOrDefault: () => (value === undefined || value === null) ? defaultValue : value,
     map: <R>(f: (wrapped: T) => R) => (value === undefined || value === null)
       ? (defaultValue === undefined || defaultValue === null)
