@@ -67,6 +67,51 @@ testPage({
         }
       },
       equal: true,
+    },
+    {
+      type: "normal",
+      title: "We can use the `toString` method on a maybe type",
+      expect: () => {
+        const maybeNumberFactory = tsf.maybeFactory(0)
+        const result = maybeNumberFactory.some(25)
+        return result.toString()
+      },
+      equal: "25",
+    },
+    {
+      type: "normal",
+      title: "We can apply a function on a maybe value that isn't null",
+      expect: () => {
+        const maybeNumberFactory = tsf.maybeFactory(0)
+        const result = maybeNumberFactory.some(25)
+        return result
+          .map((x: number) => (x * 3).toString())
+          .get()
+      },
+      equal: "75",
+    },
+    {
+      type: "normal",
+      title: "We can only apply a function on a maybe value that isn't null",
+      expect: () => {
+        const result = tsf.maybe<number>()
+        return result
+          .map((x: number) => (x * 3).toString())
+          .get()
+      },
+      equal: null,
+    },
+    {
+      type: "normal",
+      title: "We can apply a function on a maybe value, but the function must return a maybe value and not a value",
+      expect: () => {
+        const maybeNumberFactory = tsf.maybeFactory(0)
+        const result = maybeNumberFactory.some(25)
+        return result
+          .flatMap((x: number) => tsf.maybe(x * 3, null))
+          .get()
+      },
+      equal: 75,
     }
   ]
 })

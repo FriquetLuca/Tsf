@@ -4,10 +4,11 @@ export type Maybe<T> = {
   get: () => T | null,
   map: <R>(f: (wrapped: T) => R) => Maybe<R>,
   flatMap: <R>(f: (wrapped: T) => Maybe<R>) => Maybe<R>,
-  export: () => { value: T | null, defaultValue: T | null }
+  export: () => { value: T | null, defaultValue: T | null },
+  toString: () => string
 }
 
-export function maybe<T>(value: T | null, defaultValue: T | null = null): Maybe<T> {
+export function maybe<T>(value: T | null = null, defaultValue: T | null = null): Maybe<T> {
   return {
     get: () => value,
     getOrElse: (defaultValue: T) => value === null ? defaultValue : value,
@@ -18,7 +19,8 @@ export function maybe<T>(value: T | null, defaultValue: T | null = null): Maybe<
         : maybe(f(defaultValue))
       : maybe(f(value)),
     flatMap: <R>(f: (wrapped: T) => Maybe<R>) => value === null ? maybe<R>(null) : f(value),
-    export: () => ({ value, defaultValue })
+    export: () => ({ value, defaultValue }),
+    toString: () => value?.toString() ?? ""
   }
 }
 
