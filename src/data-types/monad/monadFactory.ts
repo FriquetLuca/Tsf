@@ -1,7 +1,7 @@
 export type Monad<Tag extends string, SubTag extends string, T> = {
   [K in Tag]: SubTag
 } & {
-  value: T,
+  readonly value: T,
   unit: (value: T) => Monad<Tag, SubTag, T>,
   bind: (fn: (value: T) => T) => Monad<Tag, SubTag, T>
 }
